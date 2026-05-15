@@ -4,6 +4,7 @@
  * Continue here: Module router registration and health check endpoint.
  */
 import { Router } from "express";
+import { imageRouter } from "../modules/image/image.routes";
 
 const router = Router();
 
@@ -15,6 +16,8 @@ router.get("/health", (_req, res) => {
 		meta: null,
 	});
 });
+
+router.use("/images", imageRouter);
 
 export { router };
 
