@@ -11,6 +11,7 @@ import galleryStyles from "@/styles/galleryGrid.module.css";
 
 import InteriorDesignCard from "./InteriorDesignCard";
 import { getImages, getRelatedImages } from "@/services/image.service";
+import SkeletonCard from "./Skeleton/SkeletonCard";
 
 interface GalleryGridProps {
   initialImages: ImageType[];
@@ -202,15 +203,17 @@ export default function GalleryGrid({
             <p>{isRefreshing ? "Loading images..." : "No images found for the selected tag."}</p>
           </section>
         )}
+        
+        {isLoadingMore && images.length > 0 ? (
+          Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))
+        ) : null}
       </section>
 
       {error && <p className={pageStyles.noResults}>{error}</p>}
 
       <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
-
-      {isLoadingMore && images.length > 0 ? (
-        <p className={pageStyles.noResults}>Loading more images...</p>
-      ) : null}
     </section>
   );
 }

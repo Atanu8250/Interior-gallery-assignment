@@ -108,6 +108,39 @@
   white-space: nowrap;
 }
 
+/* Skeleton card */
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.skeletonImageArea {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px 8px 0 0;
+}
+
+.skeletonTitle {
+  width: 70%;
+  height: 16px;
+  border-radius: 6px;
+}
+
+.skeletonTextLine {
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.skeletonTag {
+  width: 64px;
+  height: 24px;
+  border-radius: 999px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .masonryItem {
@@ -140,71 +173,4 @@
   .tag {
     background-color: #2a2a2a;
   }
-}
-
-/* Skeleton Loading Styles */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.skeletonCard {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: rgba(255, 255, 255, 0.02) 0px 1px 3px 0px, rgba(201, 215, 230, 0.15) 0px 0px 0px 1px;
-}
-
-.skeletonImageWrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 8px 8px 0 0;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 0%,
-    #e0e0e0 50%,
-    #f0f0f0 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
-}
-
-.skeletonInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0 10px 10px 10px;
-}
-
-.skeletonTextLine {
-  height: 12px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 0%,
-    #e0e0e0 50%,
-    #f0f0f0 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
-}
-
-.skeletonTitle {
-  height: 18px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 0%,
-    #e0e0e0 50%,
-    #f0f0f0 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
 }
