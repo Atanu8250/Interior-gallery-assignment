@@ -5,6 +5,7 @@
  */
 import { Router } from "express";
 import { imageRouter } from "../modules/image/image.routes";
+import { tagRouter } from "../modules/tag/tag.routes";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.get("/health", (_req, res) => {
 });
 
 router.use("/images", imageRouter);
+router.use("/tags", tagRouter);
 
 export { router };
 
