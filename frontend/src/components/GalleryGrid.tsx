@@ -8,6 +8,7 @@ import type { Tag as TagType } from "@/types/tag";
 
 import pageStyles from "@/styles/page.module.css";
 import galleryStyles from "@/styles/galleryGrid.module.css";
+import { toast } from "sonner";
 
 import InteriorDesignCard from "./InteriorDesignCard";
 import { getImages, getRelatedImages } from "@/services/image.service";
@@ -65,12 +66,21 @@ export default function GalleryGrid({
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
-  const loadFirstPage = async (tag: string) => {
+  const loadFirstPage = async (tag: string, showManualFilterToast = false) => {
     setIsRefreshing(true);
     setError(null);
 
     try {
-      const response = await fetchPage({ limit: 12, ...(tag ? { tag } : {}) });
+      const request = fetchPage({ limit: 12, ...(tag ? { tag } : {}) });
+      if (showManualFilterToast) {
+        toast.promise(request, {
+          loading: `Applying ${tag ?? ''} filter...`,
+          success: "Filter applied",
+          error: "Failed to apply filter",
+        });
+      }
+
+      const response = await request;
       const data = response.data;
 
       setImages(data?.images || []);
@@ -107,6 +117,7 @@ export default function GalleryGrid({
       setHasMore(data?.hasMore ?? false);
     } catch {
       setError("Failed to load more images.");
+      toast.error("Failed to load more images.");
     } finally {
       setIsLoadingMore(false);
     }
@@ -124,7 +135,7 @@ export default function GalleryGrid({
 
       if (urlTag && urlTag !== selectedTag) {
         setSelectedTag(urlTag);
-        void loadFirstPage(urlTag);
+        void loadFirstPage(urlTag, false);
       }
 
       return;
@@ -132,7 +143,7 @@ export default function GalleryGrid({
 
     if (urlTag !== selectedTag) {
       setSelectedTag(urlTag);
-      void loadFirstPage(urlTag);
+      void loadFirstPage(urlTag, false);
     }
   }, [searchParams, relatedImageId, selectedTag]);
 
@@ -156,7 +167,7 @@ export default function GalleryGrid({
   const onSelectTag = (tag: string) => {
     setSelectedTag(tag);
     updateUrl(tag);
-    void loadFirstPage(tag);
+    void loadFirstPage(tag, true);
   };
 
   return (
