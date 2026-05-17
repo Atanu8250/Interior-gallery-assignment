@@ -20,7 +20,7 @@ type ImageSeed = {
 
 const userSeeds: CreateUserInput[] = [
 	{ name: "Maya Chen", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80", bio: "Interior stylist focused on layered, light-filled residential spaces." },
-	{ name: "Noah Patel", avatar: "https://images.unsplash.com/photo-500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", bio: "Architectural photographer with a preference for clean geometry and texture." },
+	{ name: "Noah Patel", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", bio: "Architectural photographer with a preference for clean geometry and texture." },
 	{ name: "Ava Brooks", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80", bio: "Gallery curator sharing contemporary interiors and collectible objects." },
 	{ name: "Ethan Rivera", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80", bio: "Designer building warm modern spaces with tactile materials." },
 	{ name: "Zoe Kim", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=200&q=80", bio: "Creative director collecting mood-led rooms and material studies." },
