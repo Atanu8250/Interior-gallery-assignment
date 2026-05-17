@@ -20,7 +20,7 @@ type ImageSeed = {
 
 const userSeeds: CreateUserInput[] = [
 	{ name: "Maya Chen", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80", bio: "Interior stylist focused on layered, light-filled residential spaces." },
-	{ name: "Noah Patel", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", bio: "Architectural photographer with a preference for clean geometry and texture." },
+	{ name: "Noah Patel", avatar: "https://images.unsplash.com/photo-500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", bio: "Architectural photographer with a preference for clean geometry and texture." },
 	{ name: "Ava Brooks", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80", bio: "Gallery curator sharing contemporary interiors and collectible objects." },
 	{ name: "Ethan Rivera", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80", bio: "Designer building warm modern spaces with tactile materials." },
 	{ name: "Zoe Kim", avatar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=200&q=80", bio: "Creative director collecting mood-led rooms and material studies." },
@@ -40,10 +40,11 @@ const tagSeeds: CreateTagInput[] = [
 	{ name: "Neutral", slug: "neutral" },
 	{ name: "Moody", slug: "moody" },
 	{ name: "Textured", slug: "textured" },
+	{ name: "No Data", slug: "no_data" },
 ];
 
 const imageSeeds: ImageSeed[] = [
-	{ title: "Sunlit Studio Living Room", description: "A calm living room with soft curtains and oak shelving.", imageUrl: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80", tagSlugs: ["minimal", "warm", "neutral"], userIndex: 0 },
+	{ title: "Sunlit Studio Living Room with some dummy text", description: "A calm living room with soft curtains and oak shelving.", imageUrl: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80", tagSlugs: ["minimal", "warm", "neutral"], userIndex: 0 },
 	{ title: "Monochrome Dining Nook", description: "A compact dining space with sculptural seating and matte finishes.", imageUrl: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80", tagSlugs: ["modern", "minimal", "textured"], userIndex: 1 },
 	{ title: "Gallery Wall Corner", description: "Layered frames and a linen sofa in a gallery-like apartment.", imageUrl: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80", tagSlugs: ["bold", "modern", "neutral"], userIndex: 2 },
 	{ title: "Warm Kitchen Detail", description: "Natural stone, wood grain, and soft task lighting in one frame.", imageUrl: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1200&q=80", tagSlugs: ["warm", "organic", "textured"], userIndex: 3 },
