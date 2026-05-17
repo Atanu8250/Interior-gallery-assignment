@@ -1,9 +1,15 @@
+/**
+ * Image domain types
+ * - These mirror the backend response shapes used by the frontend.
+ * - Note: `uploaderSnapshot` is the recommended display object for UI fields.
+ */
 export type Image = {
   _id: string;
   title: string;
   description?: string;
   imageUrl: string;
   tags: string[];
+  // union kept for compatibility with backend. Prefer `uploaderSnapshot` for rendering.
   uploaderId: string | UploaderDetails;
   uploaderSnapshot: UploaderSnapshot;
   createdAt: string;

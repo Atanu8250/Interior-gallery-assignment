@@ -1,5 +1,9 @@
 import styles from "@/styles/interiorDesignCard.module.css";
 
+/**
+ * Presentational skeleton used while image cards are loading.
+ * Keeps layout stable during network requests.
+ */
 export default function SkeletonCard() {
   return (
     <article className={styles.skeletonCard} aria-hidden>

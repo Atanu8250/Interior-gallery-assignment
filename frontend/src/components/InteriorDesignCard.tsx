@@ -4,6 +4,11 @@ import type { Image as ImageType } from "@/types/image";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+/**
+ * `InteriorDesignCard` — renders a single image card in the masonry grid.
+ * - Click navigates to the image details page.
+ */
+
 interface InteriorDesignCardProps {
     img: ImageType
 }

@@ -3,6 +3,11 @@
 import { useState } from "react";
 import styles from "@/styles/userAvatar.module.css";
 
+/**
+ * `UserAvatar` — simple avatar component with image fallback to colored initial.
+ * - Accepts an optional `avatar` URL; if the image fails to load, shows a colored initial.
+ */
+
 interface UserAvatarProps {
   name: string;
   avatar?: string;

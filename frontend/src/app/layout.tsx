@@ -1,3 +1,7 @@
+/**
+ * Root application layout
+ * - Mounts global styles, fonts and the Sonner Toaster used for toasts.
+ */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";

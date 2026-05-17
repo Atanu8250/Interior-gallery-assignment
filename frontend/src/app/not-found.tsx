@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+/**
+ * Simple 404 page for missing routes.
+ */
 export default function NotFound() {
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>

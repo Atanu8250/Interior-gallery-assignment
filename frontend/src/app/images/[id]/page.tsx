@@ -13,6 +13,11 @@ import pageStyles from "@/styles/page.module.css";
 import styles from "@/styles/imageDetails.module.css";
 import { formatDate } from "@/utils/date";
 
+/**
+ * Image details page (server component)
+ * - Fetches a single image and an initial page of related images.
+ * - Renders a details panel and a `GalleryGrid` in related mode.
+ */
 type ImageDetailsPageProps = {
     params: Promise<{
         id: string

@@ -1,7 +1,15 @@
+/**
+ * Tag service
+ * - Fetches available tags used by the tag filter UI.
+ */
 import { buildUrl } from "@/helpers/api.helper";
 import type { ApiResponse } from "@/types/api";
 import { Tag, TagFetch } from "@/types/tag";
 
+/**
+ * Retrieve the list of tags from the backend.
+ * @param init optional fetch init
+ */
 export const getTags = async (
   init?: RequestInit,
 ): Promise<ApiResponse<TagFetch>> => {

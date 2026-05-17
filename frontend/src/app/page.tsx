@@ -1,4 +1,9 @@
 
+/**
+ * Home page
+ * - Server component that fetches the initial feed and available tags
+ * - Delegates rendering and client interactions to `GalleryGrid`.
+ */
 import styles from "@/styles/page.module.css";
 
 import { getImages } from "@/services/image.service";

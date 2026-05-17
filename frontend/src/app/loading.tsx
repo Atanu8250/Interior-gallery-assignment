@@ -1,6 +1,9 @@
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import styles from "@/styles/galleryGrid.module.css";
 
+/**
+ * App-level loading UI shown during server-side navigation to the home route.
+ */
 export default function Loading() {
   return (
     <section aria-label="Loading gallery" className="skeletonMain">

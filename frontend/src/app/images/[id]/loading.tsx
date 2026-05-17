@@ -2,6 +2,10 @@ import detailsStyles from "@/styles/imageDetails.module.css";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import userAvatarStyles from "@/styles/userAvatar.module.css";
 
+/**
+ * Loading skeleton for the image details route.
+ * Shows a placeholder for the hero image, details panel and related grid.
+ */
 export default function Loading() {
   return (
     <div style={{ padding: "2rem 1rem" }} className="skeletonMain">
