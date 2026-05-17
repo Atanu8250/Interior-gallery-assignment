@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import styles from "@/styles/userAvatar.module.css";
 
 /**
@@ -41,31 +42,24 @@ const COLORS = [
   "#DB2777",
   "#DC2626",
   "#CA8A04",
-];;
+];
 
 export default function UserAvatar({ name, avatar, size = 40 }: UserAvatarProps) {
   const [broken, setBroken] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Reset image state when avatar URL changes.
+    setBroken(false);
+    setIsLoaded(false);
+  }, [avatar]);
 
   const initial = (name && name.trim() ? name.trim()[0].toUpperCase() : "?");
   const colorIndex = (initial.charCodeAt(0) - 65) % COLORS.length;
   const bgColor = COLORS[colorIndex < 0 ? 0 : colorIndex];
 
   const dimension = `${size}px`;
-
-  if (avatar && !broken) {
-    return (
-      <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-        <img
-          src={avatar}
-          alt={name}
-          className={styles.img}
-          onError={() => setBroken(true)}
-          width={size}
-          height={size}
-        />
-      </div>
-    );
-  }
+  const shouldShowImage = Boolean(avatar) && !broken;
 
   return (
     <div
@@ -73,7 +67,34 @@ export default function UserAvatar({ name, avatar, size = 40 }: UserAvatarProps)
       style={{ width: dimension, height: dimension, backgroundColor: bgColor }}
       aria-hidden
     >
-      <span className={styles.initial} style={{ fontSize: Math.floor(size / 2) }}>{initial}</span>
+      {shouldShowImage ? (
+        <>
+          {!isLoaded ? (
+            <span className={styles.initial} style={{ fontSize: Math.floor(size / 2) }}>
+              {initial}
+            </span>
+          ) : null}
+          <Image
+            key={avatar}
+            src={avatar!}
+            alt={name}
+            className={styles.img}
+            width={size}
+            height={size}
+            sizes={`${size}px`}
+            onLoad={() => setIsLoaded(true)}
+            onError={() => {
+              setBroken(true);
+              setIsLoaded(false);
+            }}
+            style={{ opacity: isLoaded ? 1 : 0 }}
+          />
+        </>
+      ) : (
+        <span className={styles.initial} style={{ fontSize: Math.floor(size / 2) }}>
+          {initial}
+        </span>
+      )}
     </div>
   );
 }
