@@ -53,7 +53,7 @@ export const getImageById = async (req: Request, res: Response, next: NextFuncti
 
 		return sendSuccess(res, {
 			success: true,
-			message: "Image detail fetched successfully",
+			message: "Image details fetched successfully",
 			data: {
 				image,
 			},

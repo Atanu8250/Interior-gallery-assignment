@@ -5,7 +5,7 @@
  */
 import { Types } from "mongoose";
 import { AppError } from "../../utils/AppError";
-import type { FeedParams, ImageFeedQuery } from "./image.types";
+import type { FeedParams, ImageFeedQuery, RelatedImagesQuery } from "./image.types";
 import { imageRepository } from "./image.repository";
 
 function normalizeLimit(limit?: number) {
@@ -18,12 +18,17 @@ function normalizeLimit(limit?: number) {
 
 export const imageService = {
 	async getImageFeed(query: ImageFeedQuery) {
-        let feedParams:FeedParams = {
-            limit: normalizeLimit(query.limit),
-        };
+		const feedParams: FeedParams = {
+			limit: normalizeLimit(query.limit),
+		};
 
-        if(query.cursor) feedParams.cursor = query.cursor;
-        if(query.tag) feedParams.tag = query.tag;
+		if (query.cursor) {
+			feedParams.cursor = query.cursor;
+		}
+
+		if (query.tag) {
+			feedParams.tag = query.tag;
+		}
 
 		return imageRepository.findFeed(feedParams);
 	},
@@ -42,7 +47,7 @@ export const imageService = {
 		return image;
 	},
 
-	async getRelatedImages(sourceImageId: string, query: Pick<ImageFeedQuery, "limit" | "cursor">) {
+	async getRelatedImages(sourceImageId: string, query: RelatedImagesQuery) {
 		if (!Types.ObjectId.isValid(sourceImageId)) {
 			throw new AppError(400, "Invalid image id");
 		}
@@ -68,7 +73,7 @@ export const imageService = {
 			sourceImageId,
 			tags: sourceTags,
 			limit,
-			...(query.cursor && { cursor: query.cursor })
+			...(query.cursor && { cursor: query.cursor }),
 		});
 	},
 };

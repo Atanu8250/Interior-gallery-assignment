@@ -20,7 +20,7 @@ const imageSchema = new mongoose.Schema(
         description: { type: String, trim: true, default: "", maxlength: 2000 },
         imageUrl: { type: String, required: [true, "imageUrl is required"], trim: true },
         tags: { type: [String], default: [] },
-        uploaderId: { type: mongoose.Schema.Types.ObjectId, required: true },
+        uploaderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         uploaderSnapshot: { type: uploaderSnapshotSchema, required: true },
     },
     {

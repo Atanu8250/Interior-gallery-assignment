@@ -4,6 +4,7 @@
  * Continue here: Mongoose queries, projections, indexes, and cursor filters.
  */
 import { Types } from "mongoose";
+import "../user/user.model";
 import { ImageModel } from "./image.model";
 import { FeedParams, RelatedParams } from "./image.types";
 
@@ -36,7 +37,9 @@ export const imageRepository = {
 	},
 
 	async findById(id: string) {
-		return ImageModel.findById(id).lean();
+		return ImageModel.findById(id)
+			.populate({ path: "uploaderId", select: "name avatar bio" })
+			.lean();
 	},
 
 	async findRelated(params: RelatedParams) {
@@ -48,13 +51,11 @@ export const imageRepository = {
 
 		// Merge pagination $lt with existing $ne filter to exclude source image AND fetch older records
 		if (cursor && Types.ObjectId.isValid(cursor)) {
-			// Merge pagination $lt with existing $ne filter to exclude source image AND fetch older records
 			filter._id = {
 				...((filter._id as Record<string, unknown>) ?? {}),
 				$lt: new Types.ObjectId(cursor),
 			};
 		}
-
 		const docs = await ImageModel.find(filter)
 			.sort({ _id: -1 })
 			.limit(limit + 1)

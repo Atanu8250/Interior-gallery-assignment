@@ -33,7 +33,7 @@ export type UpdateImageInput = Partial<CreateImageInput>;
 export type ImageFeedQuery = {
     limit?: number;
     cursor?: string; // opaque cursor string
-    tag?: string; // filter by tag slug/name
+    tag?: string; // single tag filter for feed
 };
 
 export type ImageFeedResult = {
@@ -43,14 +43,19 @@ export type ImageFeedResult = {
 };
 
 export type FeedParams = {
-	limit: number;
-	cursor?: string;
-	tag?: string;
+    limit: number;
+    cursor?: string;
+    tag?: string;
 };
 
 export type RelatedParams = {
 	sourceImageId: string;
 	tags: string[];
 	limit: number;
-	cursor?: string;
+    cursor?: string;
+};
+
+export type RelatedImagesQuery = {
+    limit?: number;
+    cursor?: string;
 };
