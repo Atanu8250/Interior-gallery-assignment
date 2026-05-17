@@ -56,6 +56,7 @@ export default function GalleryGrid({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filterErr, setFilterErr] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const pendingTagRef = useRef<string | null>(null);
   const didHydrateRef = useRef(false);
   const refreshRequestIdRef = useRef(0);
   const manualFilterAbortRef = useRef<AbortController | null>(null);
@@ -162,6 +163,12 @@ export default function GalleryGrid({
 
     const urlTag = searchParams.get("tag") || "";
 
+    // Ignore the URL update that corresponds to our own manual click fetch
+    if (pendingTagRef.current !== null && pendingTagRef.current === urlTag) {
+      pendingTagRef.current = null;
+      return;
+    }
+
     if (!didHydrateRef.current) {
       didHydrateRef.current = true;
 
@@ -177,7 +184,7 @@ export default function GalleryGrid({
       setSelectedTag(urlTag);
       void loadFirstPage(urlTag, false);
     }
-  }, [searchParams, relatedImageId, selectedTag]);
+  }, [searchParams, relatedImageId]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;
@@ -204,6 +211,7 @@ export default function GalleryGrid({
 
   const onSelectTag = (tag: string) => {
     setSelectedTag(tag);
+    pendingTagRef.current = tag;
     updateUrl(tag);
     void loadFirstPage(tag, true);
   };
