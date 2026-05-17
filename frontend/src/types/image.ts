@@ -4,11 +4,17 @@ export type Image = {
   description?: string;
   imageUrl: string;
   tags: string[];
-  uploaderId: string;
+  uploaderId: string | UploaderDetails;
   uploaderSnapshot: UploaderSnapshot;
   createdAt: string;
   updatedAt: string;
 };
+
+type UploaderDetails = {
+  name: string,
+  avatar: string,
+  bio: string,
+}
 
 export type UploaderSnapshot = {
 	_id: string;

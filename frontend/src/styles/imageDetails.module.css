@@ -90,6 +90,12 @@
   color: var(--text-primary);
 }
 
+.uploaderBio {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
 .uploaderMeta {
   margin: 0;
   font-size: 14px;

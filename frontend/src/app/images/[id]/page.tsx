@@ -77,6 +77,7 @@ export default async function ImageDetailsPage({ params }: ImageDetailsPageProps
                             />
                             <div className={styles.uploaderText}>
                                 <p className={styles.uploaderName}>{image.uploaderSnapshot.name}</p>
+                                <p className={styles.uploaderBio}>{typeof image.uploaderId === 'string' ? image.uploaderId : image.uploaderId.bio}</p>
                                 <p className={styles.uploaderMeta}>Uploaded {formatDate(image.createdAt)}</p>
                             </div>
                         </div>
