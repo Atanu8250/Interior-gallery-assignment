@@ -57,6 +57,7 @@ export const imageRepository = {
 			};
 		}
 		const docs = await ImageModel.find(filter)
+			.select("-description")
 			.sort({ _id: -1 })
 			.limit(limit + 1)
 			.lean();
