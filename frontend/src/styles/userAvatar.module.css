@@ -8,6 +8,11 @@
   flex-shrink: 0;
 }
 
+/* Placeholder background for initials when no avatar URL is available */
+.avatarPlaceholder {
+  background: linear-gradient(135deg, #a0a0a0 0%, #8b8b8b 100%);
+}
+
 .img {
   width: 100%;
   height: 100%;
