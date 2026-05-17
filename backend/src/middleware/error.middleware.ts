@@ -3,11 +3,6 @@
  * How it is used: Registered last in the Express middleware chain.
  * Continue here: Error normalization, status mapping, and safe output format.
  *
- * Integration:
- *   // after all routes
- *   app.use(notFoundMiddleware);
- *   app.use(errorMiddleware);
- *
  * Behavior:
  *   - Maps `AppError` instances to their `statusCode` and message.
  *   - Returns a stable shape: { success, message, data, meta }.

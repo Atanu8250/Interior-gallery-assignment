@@ -3,7 +3,7 @@
  * How it is used: Imported by repositories for CRUD operations.
  * Continue here: Schema fields, validators, indexes, and model export.
  */
-import mongoose, { InferSchemaType, HydratedDocument, Model } from "mongoose";
+import mongoose from "mongoose";
 
 const uploaderSnapshotSchema = new mongoose.Schema(
     {
@@ -26,14 +26,6 @@ const imageSchema = new mongoose.Schema(
     {
         timestamps: true,
         versionKey: false,
-        toJSON: {
-            virtuals: true,
-            transform: (_doc, ret) => {
-                const normalized = ret as Record<string, unknown>;
-                normalized.id = String(normalized._id);
-                delete normalized._id;
-            },
-        },
     }
 );
 
@@ -41,14 +33,6 @@ const imageSchema = new mongoose.Schema(
 imageSchema.index({ createdAt: -1 });
 imageSchema.index({ tags: 1 });
 imageSchema.index({ uploaderId: 1 });
-
-// export type ImageDoc = HydratedDocument<InferSchemaType<typeof imageSchema>>;
-// type ImageModelType = Model<InferSchemaType<typeof imageSchema>>;
-
-// export const ImageModel = mongoose.model<InferSchemaType<typeof imageSchema>, ImageModelType>(
-//     "Image",
-//     imageSchema
-// );
 
 export const ImageModel = mongoose.model("Image", imageSchema);
 

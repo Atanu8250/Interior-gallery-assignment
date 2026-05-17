@@ -3,10 +3,6 @@
  * How it is used: Placed after all API route registrations.
  * Continue here: Route miss handler and standardized not-found payload.
  *
- * Integration:
- *   // place after route registration and before error middleware
- *   app.use(notFoundMiddleware);
- *
  * Example behavior:
  *   Will forward an `AppError(404, ...)` to the centralized error handler.
  */

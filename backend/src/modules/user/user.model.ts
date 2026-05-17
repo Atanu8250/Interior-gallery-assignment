@@ -3,7 +3,7 @@
  * How it is used: Referenced by repositories and image uploader relations.
  * Continue here: User fields, constraints, and reusable indexes.
  */
-import mongoose, { InferSchemaType, HydratedDocument, Model } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
     {
@@ -43,8 +43,4 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ createdAt: -1 });
 
-// export type UserDoc = HydratedDocument<InferSchemaType<typeof userSchema>>;
-// type UserModelType = Model<InferSchemaType<typeof userSchema>>;
-
-// export const UserModel = mongoose.model<InferSchemaType<typeof userSchema>, UserModelType>("User", userSchema);
 export const UserModel = mongoose.model("User", userSchema);
