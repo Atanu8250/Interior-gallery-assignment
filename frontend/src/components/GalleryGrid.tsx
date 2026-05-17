@@ -248,8 +248,8 @@ export default function GalleryGrid({
 
       <section className={pageStyles.masonryGrid} aria-label="Gallery results">
         {images.length > 0 ? (
-          images.map((img) => (
-            <InteriorDesignCard img={img} key={img._id} />
+          images.map((img, idx) => (
+            <InteriorDesignCard img={img} key={img._id} isAboveFold={idx < 10} />
           ))
         ) : isRefreshing ?
           Array.from({ length: 8 }).map((_, i) => (
