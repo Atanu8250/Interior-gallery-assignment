@@ -18,30 +18,17 @@ async function tryConnect(uri: string, options: mongoose.ConnectOptions) {
 }
 
 /**
- * Connect to MongoDB with simple retry/backoff.
- * @param maxRetries number of retry attempts on initial connect
+ * Connect to MongoDB
  */
-export async function connectDB(maxRetries = 5): Promise<void> {
+export async function connectDB(): Promise<void> {
 	const uri = env.mongoUri;
-	let attempt = 0;
-	const baseDelay = 1000; // ms
 
-	while (true) {
-		try {
-			await tryConnect(uri, DEFAULT_MONGO_OPTIONS);
-			console.info("MongoDB connected");
-			return;
-		} catch (err) {
-			attempt += 1;
-			console.error(`MongoDB connect attempt ${attempt} failed:`, err);
-			if (attempt > maxRetries) {
-				console.error("Exceeded max MongoDB connect retries");
-				throw err;
-			}
-			const delay = baseDelay * Math.pow(2, attempt - 1);
-			// eslint-disable-next-line no-await-in-loop
-			await new Promise((res) => setTimeout(res, delay));
-		}
+	try {
+		await tryConnect(uri, DEFAULT_MONGO_OPTIONS);
+		console.info("MongoDB connected");
+		return;
+	} catch (err) {
+		console.error(`MongoDB connect attempt failed:`, err);
 	}
 }
 
