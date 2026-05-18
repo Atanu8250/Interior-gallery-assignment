@@ -49,9 +49,6 @@ RUN npm ci --only=production
 # The source TypeScript files are NOT included, only the dist/ folder
 COPY --from=builder /app/dist ./dist
 
-# Copy seed directory (seed script needs to be available)
-COPY --from=builder /app/dist/seed ./src/seed
-
 # Expose the port that the backend runs on (default 5000)
 # This tells Docker that the container listens on this port
 # Format: PORT_NUMBER/PROTOCOL
@@ -64,7 +61,7 @@ EXPOSE 5000
 # Start period: wait 40 seconds before first check (give app time to start)
 # Retries: consider unhealthy after 3 failed checks
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5000/api/v1/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+  CMD node -e "require('http').get('http://localhost:5000/api/v1/health', (res) => { if (res.statusCode !== 200) process.exit(1); process.exit(0); }).on('error', () => process.exit(1))"
 
 # Set environment to production (this tells Express/Node to optimize for production)
 ENV NODE_ENV=production

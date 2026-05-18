@@ -1,0 +1,263 @@
+# Docker Compose Orchestration File for Interior Gallery Full Stack
+# 
+# This file defines all services needed to run the entire application:
+# - Backend API (Express + TypeScript)
+# - Frontend (Next.js)
+# - Database (MongoDB)
+#
+# USAGE:
+#   docker-compose up          # Start all services
+#   docker-compose down        # Stop all services
+#   docker-compose logs -f     # View all logs
+#   docker-compose ps          # Show status
+#
+# PORTS:
+#   Backend:  http://localhost:5000
+#   Frontend: http://localhost:3000
+#   MongoDB:  localhost:27017 (internal only, not exposed to host by default)
+
+# version: '3.8'
+
+# ============================================================================
+# SERVICES - Define the containers that make up the application
+# ============================================================================
+services:
+
+  # ========================================================================
+  # MONGODB DATABASE
+  # ========================================================================
+  mongo:
+    # Use official MongoDB image, version 7.0 (latest stable)
+    # Note: mongo:7-alpine may not be available; using mongo:7.0 instead
+    image: mongo:7.0
+    
+    # Container name for easy reference
+    container_name: interior-gallery-mongo
+    
+    # Port mapping: expose MongoDB on localhost:27017 (for development debugging)
+    # Format: "HOST_PORT:CONTAINER_PORT"
+    # Remove this line in production for security
+    ports:
+      - "27017:27017"
+    
+    # Environment variables for MongoDB
+    environment:
+      # Optional: Set root user credentials (comment out to use default)
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: interior_gallery
+    
+    # Volume mounts: persists data between container restarts
+    volumes:
+      # Named volume: Database data persists even after container deletion
+      # Format: "VOLUME_NAME:CONTAINER_PATH"
+      - mongo-data:/data/db
+      
+      # Mounted init script: Runs on first container startup
+      # This allows us to create collections or indexes on first run
+      # (optional - MongoDB will auto-create collections as needed)
+      # - ./backend/src/seed/init.js:/docker-entrypoint-initdb.d/init.js
+    
+    # Health check: Verify MongoDB is responding
+    # Command: Connect to MongoDB and run a simple command
+    # interval: check every 10 seconds
+    # timeout: wait 5 seconds for response
+    # start_period: wait 30 seconds before first check
+    # retries: mark unhealthy after 3 failed checks
+    healthcheck:
+      test: ["CMD", "mongosh", "localhost:27017/test", "--eval", "db.runCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    
+    # Network aliases: services can reach MongoDB using "mongo" or "mongodb"
+    networks:
+      - interior-gallery-network
+
+  # ========================================================================
+  # BACKEND API
+  # ========================================================================
+  backend:
+    # Build the backend image from the Dockerfile in the backend directory
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    
+    # Container name
+    container_name: interior-gallery-backend
+    
+    # Ports: expose backend on localhost:5000
+    # The backend server listens on 0.0.0.0:5000 (all interfaces)
+    ports:
+      - "5000:5000"
+    
+    # Environment variables: passed to the container at runtime
+    # These override/supplement the .env file (if it exists)
+    environment:
+      # Database connection string
+      # Format: mongodb://USERNAME:PASSWORD@HOSTNAME:PORT/DATABASE
+      # Since services are on the same Docker network:
+      # - hostname is the service name: "mongo"
+      # - port is the container port: 27017
+      MONGO_URI: mongodb://mongo:27017/interior_gallery
+      
+      # Port the backend API listens on
+      PORT: 5000
+      
+      # Environment mode
+      NODE_ENV: production
+    
+    # Depends on: Wait for MongoDB to be healthy before starting backend
+    # This ensures the database is ready before the app tries to connect
+    depends_on:
+      mongo:
+        condition: service_healthy
+    
+    # Network: Connect to the internal Docker network
+    # Allows communication with other services (mongo, frontend)
+    networks:
+      - interior-gallery-network
+    
+    # Health check: Verify backend API is responding
+    # Hits the /health endpoint we added to the backend
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/v1/health',(res)=>process.exit(res.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+  # ========================================================================
+  # SEEDING JOB - Run once to populate the database
+  # ========================================================================
+  seed:
+    # Use the same backend image (already built)
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    
+    # Container name
+    container_name: interior-gallery-seed
+    
+    # Override the default command to run the seed script instead of the app
+    # This runs: "npm run seed" which is "ts-node src/seed/seed.ts"
+    # After seeding, the container exits (this is normal and expected)
+    command: npm run seed
+    
+    # Environment variables: same as backend
+    environment:
+      MONGO_URI: mongodb://mongo:27017/interior_gallery
+      NODE_ENV: development
+    
+    # Only depends on backend; mongo dependency is transitive
+    # (backend won't be healthy until mongo is healthy)
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+    # Network: Connect to internal Docker network
+    networks:
+      - interior-gallery-network
+    
+    # Restart policy:
+    # "no" means don't automatically restart if the seed job fails
+    # You can set to "on-failure:3" to retry 3 times on failure
+    restart: "no"
+
+  # ========================================================================
+  # FRONTEND (NEXT.JS)
+  # ========================================================================
+  frontend:
+    # Build the frontend image from the Dockerfile in the frontend directory
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    
+    # Container name
+    container_name: interior-gallery-frontend
+    
+    # Ports: expose frontend on localhost:3000
+    ports:
+      - "3000:3000"
+    
+    # Environment variables for Next.js
+    environment:
+      # The backend API URL that the frontend uses to make API calls
+      # Browser-side requests go to the frontend host, which Next rewrites to the backend
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:3000
+
+      # Server-side rendering inside the frontend container talks directly to the backend service
+      BACKEND_INTERNAL_URL: http://backend:5000
+      
+      # Next.js environment
+      NODE_ENV: production
+    
+    # Depends on: Wait for backend to be healthy before starting frontend
+    # This ensures the API is ready before frontend tries to call it
+    depends_on:
+      backend:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    
+    # Network: Connect to internal Docker network
+    networks:
+      - interior-gallery-network
+    
+    # Health check: Verify frontend is responding
+    # Hits the root page
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000',(res)=>process.exit(res.statusCode<500?0:1)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+# ============================================================================
+# NETWORKS - Enable service-to-service communication
+# ============================================================================
+networks:
+  # Custom bridge network: allows containers to communicate by service name
+  # Example: backend can reach MongoDB by hostname "mongo"
+  interior-gallery-network:
+    driver: bridge
+
+# ============================================================================
+# VOLUMES - Persist data between container runs
+# ============================================================================
+volumes:
+  # Named volume for MongoDB data persistence
+  # Data stored here survives container deletion and recreation
+  # Location on host: Docker's data directory (varies by OS)
+  # - Linux: /var/lib/docker/volumes/
+  # - Mac: ~/Library/Containers/com.docker.docker/Data/vms/0/
+  # - Windows: C:\ProgramData\Docker\volumes\
+  mongo-data:
+    driver: local
+
+# ============================================================================
+# QUICK REFERENCE
+# ============================================================================
+# Start the stack:
+#   docker-compose up --build
+#
+# Stop the stack:
+#   docker-compose down
+#
+# Stop and remove volumes (DELETES DATABASE):
+#   docker-compose down -v
+#
+# View logs:
+#   docker-compose logs -f backend
+#   docker-compose logs -f frontend
+#   docker-compose logs -f mongo
+#
+# Access services:
+#   Frontend: http://localhost:3000
+#   Backend:  http://localhost:5000
+#   MongoDB:  mongodb://localhost:27017 (local tools only)
+#
+# Rebuild after code changes:
+#   docker-compose up --build

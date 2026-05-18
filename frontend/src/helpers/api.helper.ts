@@ -1,20 +1,21 @@
 /**
  * API helpers
- * - Builds absolute URLs for backend endpoints using NEXT_PUBLIC_BACKEND_URL.
+ * - Builds absolute URLs for backend endpoints using server and browser base URLs.
  */
 import { ImageFeedParams } from "@/types/image";
 
 
 const getBaseUrl = () => {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (typeof window !== "undefined") {
+    return process.env.NEXT_PUBLIC_BACKEND_URL || window.location.origin;
+  }
+  const rawBaseUrl = process.env.BACKEND_INTERNAL_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
 
   if (!rawBaseUrl) {
-    throw new Error("Missing backend URL. Set BACKEND_URL in your environment.");
+    throw new Error("Missing backend URL. Set BACKEND_INTERNAL_URL (or NEXT_PUBLIC_BACKEND_URL) in your environment.");
   }
 
-  return rawBaseUrl.startsWith("http://") || rawBaseUrl.startsWith("https://")
-    ? rawBaseUrl
-    : `http://${rawBaseUrl}`;
+  return rawBaseUrl;
 };
 
 /**
