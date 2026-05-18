@@ -85,10 +85,15 @@ async function seedDatabase() {
 	await connectDB();
 
 	try {
+		const existingImageCount = await ImageModel.countDocuments();
+		if (existingImageCount > 0) {
+			console.info(`Seed skipped: database already contains ${existingImageCount} images`);
+			return;
+		}
+
 		await Promise.all([
 			UserModel.deleteMany({}),
 			TagModel.deleteMany({}),
-			ImageModel.deleteMany({}),
 		]);
 
 		const users = await UserModel.insertMany(userSeeds);

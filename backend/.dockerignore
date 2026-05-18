@@ -1,0 +1,36 @@
+# .dockerignore: Files to EXCLUDE from the Docker build context
+# This speeds up builds by not copying unnecessary files into the Docker container
+
+# Node modules (we'll install fresh in the container)
+node_modules/
+
+# Compiled JavaScript (we'll build it in the container)
+dist/
+
+# Git files (not needed in container)
+.git/
+.gitignore
+
+# Environment file with local secrets (use docker-compose.yml instead)
+.env
+.env.local
+.env.*.local
+
+# IDE configuration (not needed in container)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Package manager locks (optional - some prefer to include)
+# npm-shrinkwrap.json
